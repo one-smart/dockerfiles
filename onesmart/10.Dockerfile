@@ -5,7 +5,7 @@ ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV GITLAB_URL "https://gitlab.com/"
-ENV GITLAB_TOKEN "PROJECT_REGISTRATION_TOKEN"
+ENV GITLAB_TOKEN "TOKEN"
 ENV GITLAB_TAGS "tags"
 
 
@@ -13,8 +13,6 @@ RUN apt-get update && apt-get install -y nano curl git
 
 RUN curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | bash
 RUN apt-get install -y gitlab-runner
-
-RUN gitlab-runner register --non-interactive --url $GITLAB_URL --registration-token $GITLAB_TOKEN --executor "shell" --tag-list $GITLAB_TAGS || true
 
 RUN apt-get update \
     && apt-get install -y systemd systemd-sysv \
@@ -31,4 +29,6 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
 
 VOLUME [ "/sys/fs/cgroup" ]
 
-CMD ["/lib/systemd/systemd"]
+COPY ./docker-entrypoint.sh /root/docker-entrypoint.sh
+RUN ["chmod", "+x", "/root/docker-entrypoint.sh"]
+ENTRYPOINT ["sh", "/root/docker-entrypoint.sh"]
