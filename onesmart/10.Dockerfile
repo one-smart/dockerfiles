@@ -10,17 +10,11 @@ ENV GITLAB_TAGS "tags"
 
 
 RUN apt-get update && apt-get install -y nano curl git
-RUN curl -LJO "https://gitlab-runner-downloads.s3.amazonaws.com/latest/deb/gitlab-runner_amd64.deb"
-RUN dpkg -i gitlab-runner_amd64.deb
 
+RUN curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | bash
+RUN apt-get install -y gitlab-runner
 
-RUN gitlab-runner register \
-  --non-interactive \
-  --url $GITLAB_URL \
-  --registration-token $GITLAB_TOKEN \
-  --executor "shell" \
-  --tag-list $GITLAB_TAGS
-
+RUN gitlab-runner register --non-interactive --url $GITLAB_URL --registration-token $GITLAB_TOKEN --executor "shell" --tag-list $GITLAB_TAGS || true
 
 RUN apt-get update \
     && apt-get install -y systemd systemd-sysv \
