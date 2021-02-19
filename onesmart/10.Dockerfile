@@ -29,6 +29,6 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
 
 VOLUME [ "/sys/fs/cgroup" ]
 
-COPY ./docker-entrypoint.sh /root/docker-entrypoint.sh
+COPY onesmart/docker-entrypoint.sh /root/docker-entrypoint.sh
 RUN ["chmod", "+x", "/root/docker-entrypoint.sh"]
 ENTRYPOINT ["sh", "/root/docker-entrypoint.sh"]
