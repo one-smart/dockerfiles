@@ -9,7 +9,7 @@ ENV GITLAB_TOKEN "TOKEN"
 ENV GITLAB_TAGS "tags"
 
 
-RUN apt-get update && apt-get install -y nano curl git
+RUN apt-get update && apt-get install -y nano curl git sudo
 
 RUN curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | bash
 RUN apt-get install -y gitlab-runner
@@ -28,6 +28,7 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
     /lib/systemd/system/systemd-update-utmp*
 
 VOLUME [ "/sys/fs/cgroup" ]
+CMD ["/lib/systemd/systemd"]
 
 COPY onesmart/docker-entrypoint.sh /root/docker-entrypoint.sh
 RUN ["chmod", "+x", "/root/docker-entrypoint.sh"]
